@@ -151,7 +151,7 @@ def hello
 #...
 ```
 
-set the routes 
+Set the routes 
 ```rb
 # In application_controller.rb
 #...
@@ -160,3 +160,55 @@ root "application#hello"
 
 #...
 ```
+
+> To avoid integration headaches later on, it’s also a good idea to deploy the app to Heroku even at this early stage
+
+```scss
+// IN TERMINAL TYPE
+$ git add -A
+$ git commit -am "Add hello"
+$ git push
+$ heroku create
+$ git push heroku master
+```
+> If you run into problems at Heroku, make sure to take a look at the production logs to try to diagnose the problem.
+
+```scss
+// IN TERMINAL TYPE
+$ heroku logs
+```
+
+## <u>Static pages</u>
+
+- In this section, we’ll be working mainly in the app/controllers and app/views directories
+
+It’s a good practice to do our work on a separate topic branch rather than the master branch
+
+```scss
+// IN TERMINAL TYPE
+$ git checkout -b static-pages
+```
+
+## <u>Generated static pages</u>
+- first generate a controller using the same Rails generate script we used to generate scaffolding.
+
+```scss
+// IN TERMINAL TYPE
+$ rails generate controller StaticPages home help
+```
+
+- We create a static_pages_controller.rb
+- We created the static_pages folder in views
+- Inside that folder scaffold generated two erb files `home.html.erb & help.html.erb`
+- Inside the routes.rb you will see the routes created for home & help
+
+### `Some Rails Shortcut command`
+
+|Full command    |Shortcut |
+|----------------|---------|
+|$ rails server  |$ rails s|
+|$ rails console |$ rails c|
+|$ rails generate|$ rails g|
+|$ rails test    |$ rails t|
+|$ bundle install|$ bundle |
+
