@@ -138,3 +138,25 @@ $ bundle update
 </details>
 
 ---
+
+Set the controller
+```rb
+# In application_controller.rb
+#...
+
+def hello
+    render html: "Hello World!"
+  end
+
+#...
+```
+
+set the routes 
+```rb
+# In application_controller.rb
+#...
+
+root "application#hello"
+
+#...
+```
