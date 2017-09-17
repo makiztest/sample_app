@@ -320,3 +320,30 @@ $ rails generate migration add_index_to_users_email
 # migrate the database
 rails db:migrate
 ```
+- Having addressed the uniqueness caveat, there’s one more change we need to make to be assured of email uniqueness
+
+- Some database adapters use case-sensitive indices, considering the strings “Foo@ExAMPle.CoM” and “foo@example.com” to be distinct, but our application treats those addresses as the same.
+
+- To avoid this incompatibility, we’ll standardize on all lower-case addresses, converting “Foo@ExAMPle.CoM” to “foo@example.com” before saving it to the database.
+
+- The way to do this is with a `callback`, which is a method that gets invoked at a particular point in the lifecycle of an Active Record object.
+
+- so we’ll use a `before_save callback` to downcase the email attribute before saving the user.
+
+```rb
+# In app/models/user.rb
+
+#class User < ApplicationRecord
+  before_save { self.email = email.downcase }
+#  validates :name,  presence: true, length: { maximum: 50 }
+#  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+#  validates :email, presence: true, length: { maximum: 255 },
+#                    format: { with: VALID_EMAIL_REGEX },
+#                    uniqueness: { case_sensitive: false }
+#end
+```
+
+> passes a block to the before_save callback and sets the user’s email address to a lower-case version of its current value using the downcase string method.
+
+(where `self` refers to the `current user`), but inside the User model the self keyword is optional on the right-hand side:
+
