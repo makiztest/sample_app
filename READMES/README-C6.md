@@ -259,7 +259,7 @@ user.errors.full_messages
 ## Uniqueness validation
 - To enforce uniqueness of email addresses (so that we can use them as usernames), we’ll be using the `:unique option` to the validates method.
 
-Validating the uniqueness of email addresses
+- Validating the uniqueness of email addresses
 ```rb
 # In app/models/user.rb
 
@@ -269,5 +269,21 @@ Validating the uniqueness of email addresses
 #  validates :email, presence: true, length: { maximum: 255 },
 #                    format: { with: VALID_EMAIL_REGEX },
                     uniqueness: true
+end
+```
+
+## Validating the uniqueness of email addresses, ignoring case
+
+-  avoiding case sensitive string duplication username and email
+
+```rb
+# In app/models/user.rb
+
+#class User < ApplicationRecord
+#  validates :name,  presence: true, length: { maximum: 50 }
+#  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+#  validates :email, presence: true, length: { maximum: 255 },
+#                    format: { with: VALID_EMAIL_REGEX },
+                    uniqueness: { case_sensitive: false }
 end
 ```
