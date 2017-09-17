@@ -217,3 +217,57 @@ end
 |/	                                 |end of regex                                     |
 |i                                   |case-insensitive                                 |
 
+The [Rubular website](http://www.rubular.com/) has a beautiful interactive interface for making regular expressions.
+
+## Validating the email format with a regular expression
+```rb
+# In app/models/user.rb
+
+#your code should be like this
+class User < ApplicationRecord
+  validates :name,  presence: true, length: { maximum: 50 }
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  validates :email, presence: true, length: { maximum: 255 },
+                    format: { with: VALID_EMAIL_REGEX }
+end
+```
+
+- Check again create a new user and test if its valid and see the error message.
+```rb
+# check if the user is valid
+user.valid?
+
+# see error message
+user.errors.full_messages
+```
+
+## Disallowing double dots in email domain names
+```rb
+# In app/models/user.rb
+
+#class User < ApplicationRecord
+  #validates :name, presence: true, length: { maximum: 50 }
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  #validates :email, presence:   true, length: { maximum: 255 },
+                    #format:     { with: VALID_EMAIL_REGEX }
+#end
+
+# we add this regex code
+(\.[a-z\d\-]+)*
+```
+
+## Uniqueness validation
+- To enforce uniqueness of email addresses (so that we can use them as usernames), we’ll be using the `:unique option` to the validates method.
+
+Validating the uniqueness of email addresses
+```rb
+# In app/models/user.rb
+
+#class User < ApplicationRecord
+#  validates :name,  presence: true, length: { maximum: 50 }
+#  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+#  validates :email, presence: true, length: { maximum: 255 },
+#                    format: { with: VALID_EMAIL_REGEX },
+                    uniqueness: true
+end
+```
