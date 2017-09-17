@@ -628,3 +628,39 @@ $ git checkout master
 $ git merge branch-name
 ```
 
+### SSL in production
+
+- When submitting the signup form developed in this chapter, the name, email address, and password get sent over the network, and hence are vulnerable to being intercepted by malicious users. 
+  - This is a potentially serious security flaw in our application, and the way to fix it is to use Secure Sockets Layer (SSL) to encrypt all relevant information before it leaves the local browser.
+
+Enabling SSL is as easy as uncommenting a single line in production.rb, the configuration file for production applications.
+
+```rb
+# In config/environments/production.rb
+
+#Rails.application.configure do
+
+  # Force all access to the app over SSL, use Strict-Transport-Security,
+  # and use secure cookies.
+  config.force_ssl = true
+
+#end
+```
+
+- At this stage, we need to set up SSL on the remote server. Setting up a production site to use SSL involves purchasing and configuring an SSL certificate for your domain.
+
+  - That’s a lot of work, though, and luckily we won’t need it here: for an application running on a Heroku domain (such as the sample application), we can piggyback on Heroku’s SSL certificate.
+
+  - As a result, when we deploy the application in SSL will automatically be enabled.
+
+  ## Production webserver
+
+Having added SSL, we now need to configure our application to use a webserver suitable for production applications.
+
+By default, `Heroku` uses a `pure-Ruby webserver` called `WEBrick`, which is easy to set up and run but isn’t good at handling significant traffic.
+
+> As a result, WEBrick isn’t suitable for production use, so we’ll replace WEBrick with `Puma`, an HTTP server that is capable of handling a large number of incoming requests.
+
+### To add the new webserver, we simply follow the [Heroku Puma documentation](https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server).
+
+
