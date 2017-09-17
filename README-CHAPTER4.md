@@ -106,5 +106,18 @@ see link for test update here [Test update](https://www.railstutorial.org/book/r
 
 ---
 
-## Strings and methods
+## Method definitions
+Define a function string_message that takes a single argument and returns a message based on whether the argument is empty or not.
+
+```rb
+
+def string_message(str = ' ')
+  if str.empty?
+  put 'Its an empty string'
+  else 
+  put 'The string is not empty'
+end
+
+```
+
 
