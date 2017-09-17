@@ -184,3 +184,7 @@ end
 
 get  '/signup', to: 'users#new'
 ```
+
+> Change the sign up link in home.html.erb
+
+# The End
