@@ -387,3 +387,36 @@ gem 'bcrypt',         '3.1.11'
 ```rb
 bundle install
 ```
+
+### User has secure password
+
+Now that we’ve supplied the User model with the required password_digest attribute and installed bcrypt, we’re ready to add has_secure_password to the User model.
+```rb
+# In app/models/user.rb
+#class User < ApplicationRecord
+#  before_save { self.email = email.downcase }
+#  validates :name, presence: true, length: { maximum: 50 }
+#  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+#  validates :email, presence: true, length: { maximum: 255 },
+#                    format: { with: VALID_EMAIL_REGEX },
+#                    uniqueness: { case_sensitive: false }
+  has_secure_password
+#end
+```
+### The complete implementation for secure passwords
+
+- Ensure nonblank passwords, It turns out the has_secure_password method includes a `presence` validation.
+
+```rb
+# In app/models/user.rb
+#class User < ApplicationRecord
+#  before_save { self.email = email.downcase }
+#  validates :name, presence: true, length: { maximum: 50 }
+#  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+#  validates :email, presence: true, length: { maximum: 255 },
+#                    format: { with: VALID_EMAIL_REGEX },
+#                    uniqueness: { case_sensitive: false }
+#  has_secure_password
+  validates :password, presence: true, length: { minimum: 6 }
+#end
+```
