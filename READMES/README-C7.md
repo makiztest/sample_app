@@ -132,4 +132,73 @@ This is a YAML5 representation of params, which is basically a hash, and in this
  ```rb
  # In config/routes.rb
 
- 
+ #Rails.application.routes.draw do
+#  root 'static_pages#home'
+#  get  '/help',    to: 'static_pages#help'
+#  get  '/about',   to: 'static_pages#about'
+#  get  '/contact', to: 'static_pages#contact'
+#  get  '/signup',  to: 'users#new'
+  resources :users
+#end
+```
+
+### RESTful routes provided by the Users resource
+
+|HTTP request  |URL       |Action |Named route         |Purpose                         |
+|--------------|----------|-------|--------------------|--------------------------------|
+|GET           |/users    |index  |users_path          |page to list all users          |
+|GET           |/users/1  |show   |user_path(user)     |page to show user               |
+|GET           |/users/new|new    |new_user_path       |page to make a new user (signup)|
+|POST          |/users    |create |users_path          |create a new user               |
+|GET           |/users/1/ |edit   |edit_user_path(user)|page to edit user with id 1     |
+|PATCH         |/users/1  |update |user_path(user)     |update user                     |
+|DELETE        |/users/1  |destroy|user_path(user)     |delete user                     |
+
+## We’ll use the standard Rails location for showing a user
+
+- Create a show template in view
+```rb
+# add this code temporarily 
+<%= @user.name %>, <%= @user.email %>
+```
+
+### In order to get the user show view to work, we need to define an @user variable in the corresponding show action in the Users controller.
+
+```rb
+# In app/controllers/users_controller.rb
+
+#class UsersController < ApplicationController
+
+  def show
+    @user = User.find(params[:id])
+  end
+
+#  def new
+#  end
+#end
+```
+
+- Here we’ve used `params` to retrieve the `user id`
+    - the effect is the same as the find method `User.find(1)`
+
+## Debugger
+
+Information in the debug could help us understand what’s going on in our application.
+- using the byebug gem
+    - To see how it works, we just need to add a line consisting of debugger to our application.
+
+```rb
+# In app/controllers/users_controller.rb
+
+#class UsersController < ApplicationController
+
+#  def show
+#    @user = User.find(params[:id])
+     debugger
+#  end
+
+#  def new
+#  end
+#end
+```
+
