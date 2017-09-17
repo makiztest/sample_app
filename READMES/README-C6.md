@@ -420,3 +420,16 @@ Now that we’ve supplied the User model with the required password_digest attri
   validates :password, presence: true, length: { minimum: 6 }
 #end
 ```
+### Creating and authenticating a user
+
+In the console try to create a new user and its attributes. dont use sandbox as we like to add the user in the database.
+
+```rb
+# In terminal
+rails console
+
+# create a new user
+User.create(name: "Mark Delos Reyes", email: "markdr@example.com", password: "foobar", password_confirmation: "foobar")
+```
+
+## THE END
