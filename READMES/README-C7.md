@@ -418,15 +418,25 @@ end
 #<h1>Sign up</h1>
 
 #<div class="row">
-#  <div class="col-md-6 col-md-offset-3">
-#    <%= form_for(@user) do |f| %>
-      <%= render 'partials/error_messages' %>
+  <div class="col-md-6">
+    <%= form_for(@user) do |f| %>
+    <%= render 'partials/error_messages' %>
 
-#      <%= f.label :name %>
-     <%= f.text_field :name, class: 'form-control' %>
+      <%= f.label :name %>
+      <%= f.text_field :name, class: 'form-control' %>
 
-...
-#</div>
+      <%= f.label :email %>
+      <%= f.email_field :email, class: 'form-control' %>
+
+      <%= f.label :password %>
+      <%= f.password_field :password, class: 'form-control'  %>
+
+      <%= f.label :password_confirmation, "Confirmation" %>
+      <%= f.password_field :password_confirmation, class: 'form-control' %>
+
+      <%= f.submit "Create my account", class: "btn btn-primary" %>
+    <% end %>
+  </div>
 ```
 
 > Notice here that we `render a partial` called `’partials/error_messages’`; this reflects the common Rails convention of using a dedicated shared/ directory for partials expected to be used in views across multiple controllers.
@@ -490,14 +500,70 @@ We see here that pluralize takes an integer argument and then returns the number
 }
 ```
 
-## A test for invalid submission
+## Adding a signup route responding to POST requests
+```rb
+# In config/routes.rb
 
-To get started, we first `generate an integration test` file for signing up users, which we’ll call users_signup (adopting the controller convention of a plural resource name)
+#Rails.application.routes.draw do
+#  root 'static_pages#home'
+#  get  '/help',    to: 'static_pages#help'
+#  get  '/about',   to: 'static_pages#about'
+#  get  '/contact', to: 'static_pages#contact'
+#  get  '/signup',  to: 'users#new'
+  post '/signup',  to: 'users#create'
+#  resources :users
+#end
+```
 
 ```rb
-# TYPE IN TERMINAL
-$ rails generate integration_test users_signup
+# In app/views/users/new.html.erb
+
+#<% provide(:title, 'Sign up') %>
+#<h1>Sign up</h1>
+
+#<div class="row">
+#  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@user, url: signup_path) do |f| %>
+#      <%= render 'shared/error_messages' %>
+
+#      <%= f.label :name %>
+#      <%= f.text_field :name, class: 'form-control' %>
+
+...
 ```
-> The main purpose of our test is to verify that clicking the signup button results in not creating a new user when the submitted information is invalid.
+
+- Although it’s possible to render a template for the create action, the usual practice is to `redirect` to a different page instead when the creation is successful
+
+  - The application code, which introduces the `redirect_to` method, appears.
+
+```rb
+# In app/controllers/users_controller.rb
+...
+
+#  def create
+#    @user = User.new(user_params)
+#    if @user.save
+      redirect_to @user
+#    else
+#      render 'new'
+#    end
+#  end
+
+...
+```  
+
+Note that we’ve written
+```rb
+redirect_to @user
+
+# is the same as
+redirect_to user_url(@user)
+```
+
+## The flash
+
+- The Rails way to `display a temporary message` is to use a special method called the `flash`, which we can treat like a hash
+  - Rails adopts the convention of a :success key for a message indicating a successful result.
+
 
 
