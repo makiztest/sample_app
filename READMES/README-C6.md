@@ -432,4 +432,22 @@ rails console
 User.create(name: "Mark Delos Reyes", email: "markdr@example.com", password: "foobar", password_confirmation: "foobar")
 ```
 
+## Commit and push to master and heroku
+```rb
+$ git add -A
+$ git commit -m "Your commit message"
+
+# if you are in a different branch checkout to master first
+$ git checkout master
+$ git merge your-branch-name #merge your branch
+$ git push # push to remote repository
+
+# push to heroku
+$ git push heroku
+$ heroku run rails db:migrate # migrate the database
+
+# pull in master
+$ git pull # to update your branch if needed
+```
+
 ## THE END
