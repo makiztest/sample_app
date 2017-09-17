@@ -329,3 +329,19 @@ Lets do some simple custom content in our home page.
   book</a>.
 </p>
 ```
+
+## <u>Getting started with testing</u>
+
+- When making a change of this nature, it’s a good practice to write an automated test to verify that the feature is implemented correctly.
+
+### `Our main testing tools`
+1. controller tests `(We will do in this section)`
+2. model tests 
+3. integration tests
+
+## Our first test
+Now it’s time to add an About page to our application.
+
+- Rails has already done the hardest part for us, because rails generate controller automatically generated a test file to get us started.
+
+To see the rest of the test tutorial go to this link [Initial test](https://www.railstutorial.org/book/static_pages)
