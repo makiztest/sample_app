@@ -663,4 +663,29 @@ By default, `Heroku` uses a `pure-Ruby webserver` called `WEBrick`, which is eas
 
 ### To add the new webserver, we simply follow the [Heroku Puma documentation](https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server).
 
+1. The first step is to include the puma gem in our Gemfile, but as of Rails 5 Puma is included by default 
+2. which is to replace the default contents of the file config/puma.rb with the configuration.
+```rb
+# In config/puma.rb
 
+workers Integer(ENV['WEB_CONCURRENCY'] || 2)
+threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
+threads threads_count, threads_count
+
+preload_app!
+
+rackup      DefaultRackup
+port        ENV['PORT']     || 3000
+environment ENV['RACK_ENV'] || 'development'
+
+on_worker_boot do
+  # Worker specific setup for Rails 4.1+
+  # See: https://devcenter.heroku.com/articles/
+  # deploying-rails-applications-with-the-puma-web-server#on-worker-boot
+  ActiveRecord::Base.establish_connection
+end
+```
+
+### We also need to make a so-called Procfile to tell Heroku to run a Puma process in production
+
+- The Procfile should be created in your application’s root directory (i.e., in the same location as the Gemfile).
