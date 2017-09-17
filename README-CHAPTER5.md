@@ -154,3 +154,33 @@ get  '/help', to: 'static_pages#help', as: 'helf'
 ```
 ---
 
+## User signup: A first step
+
+As a capstone to our work on the layout and routing, in this section we’ll make a route for the signup page.
+
+### Users controller
+```scss
+// Type in Terminal
+
+$ rails generate controller Users new
+```
+> This creates a Users controller with a new action and a stub user view.
+
+```rb
+# In app/controllers/users_controller.rb
+
+class UsersController < ApplicationController
+
+  def new  # rails auto generate the code for us
+  end
+end
+
+...
+```
+
+## Create the Signup URL
+```rb
+# In routes.rb
+
+get  '/signup', to: 'users#new'
+```
