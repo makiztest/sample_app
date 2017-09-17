@@ -405,3 +405,99 @@ class UsersController < ApplicationController
     end
 end
 ```
+
+## Signup error messages
+
+- Here the `errors.full_messages` object contains an array of error messages.
+
+### Code to display error messages on the signup form
+```rb
+# In app/views/users/new.html.erb
+
+#<% provide(:title, 'Sign up') %>
+#<h1>Sign up</h1>
+
+#<div class="row">
+#  <div class="col-md-6 col-md-offset-3">
+#    <%= form_for(@user) do |f| %>
+      <%= render 'partials/error_messages' %>
+
+#      <%= f.label :name %>
+     <%= f.text_field :name, class: 'form-control' %>
+
+...
+#</div>
+```
+
+> Notice here that we `render a partial` called `’partials/error_messages’`; this reflects the common Rails convention of using a dedicated shared/ directory for partials expected to be used in views across multiple controllers.
+
+### `This means that we have to create a new app/views/shared directory using mkdir`
+
+```rb
+# In app/views/partials/_error_messages.html.erb
+
+<% if @user.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@user.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+```
+
+> By the way, all of these methods—count, empty?, and any?—work on Ruby arrays as well.
+
+The other new idea is the `pluralize text helper`, which is available in the console via the helper object.
+
+```rb
+>> helper.pluralize(1, "error")
+=> "1 error"
+>> helper.pluralize(5, "error")
+=> "5 errors"
+```
+
+We see here that pluralize takes an integer argument and then returns the number with a properly pluralized version of its second argument.
+
+- the CSS `id error_explanation` for use in styling the error messages.
+
+  - In addition, after an invalid submission Rails automatically wraps the fields with errors in divs with the CSS class field_with_errors.
+
+  - which makes use of `Sass’s @extend function` to include the functionality of the `Bootstrap class has-error`.
+
+```scss
+/* forms */
+.
+.
+.
+#error_explanation {
+  color: red;
+  ul {
+    color: red;
+    margin: 0 0 30px 0;
+  }
+}
+
+.field_with_errors {
+  @extend .has-error;
+  .form-control {
+    color: $state-danger-text;
+  }
+}
+```
+
+## A test for invalid submission
+
+To get started, we first `generate an integration test` file for signing up users, which we’ll call users_signup (adopting the controller convention of a plural resource name)
+
+```rb
+# TYPE IN TERMINAL
+$ rails generate integration_test users_signup
+```
+> The main purpose of our test is to verify that clicking the signup button results in not creating a new user when the submitted information is invalid.
+
+
