@@ -565,5 +565,66 @@ redirect_to user_url(@user)
 - The Rails way to `display a temporary message` is to use a special method called the `flash`, which we can treat like a hash
   - Rails adopts the convention of a :success key for a message indicating a successful result.
 
+### Adding a flash message to user signup
 
+```rb
+# app/controllers/users_controller.rb
+...
+
+#  def create
+#    @user = User.new(user_params)
+#    if @user.save
+      flash[:success] = "Welcome to the Sample App!"
+#      redirect_to @user
+#    else
+#      render 'new'
+#    end
+#  end
+
+...
+```
+
+```rb
+# In app/views/layouts/application.html.erb
+...
+
+#  <body>
+#    <%= render 'layouts/header' %>
+#    <div class="container">
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type %>"><%= message %></div>
+      <% end %>
+
+...
+```
+
+- Because the message is also inserted into the template, the full HTML result for
+```rb
+flash[:success] = "Welcome to the Sample App!"
+```
+
+- appears as follows:
+```rb
+<div class="alert alert-success">Welcome to the Sample App!</div>
+```
+
+## The first signup
+
+We can see the result of all this work by signing up the first user for the sample app.
+
+```rb
+# TYPE IN TERMINAL
+$ rails db:migrate:reset
+```
+
+## Professional-grade deployment
+
+```rb
+# Type in TERMINAL
+
+$ git add -A
+$ git commit -m "Finish user signup"
+$ git checkout master
+$ git merge branch-name
+```
 
