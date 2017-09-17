@@ -268,4 +268,64 @@ end
 
 ### Using `form_for`
 
+```rb
+# In app/controllers/users_controller.rb
 
+#class UsersController < ApplicationController
+
+#  def show
+#    @user = User.find(params[:id])
+#  end
+
+#  def new
+    @user = User.new
+#  end
+#end
+```
+
+# Create the form in views
+```rb
+# In app/views/users/new.html.erb
+
+<% provide(:title, 'Sign up') %>
+<h1>Sign up</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@user) do |f| %>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+
+      <%= f.label :email %>
+      <%= f.email_field :email %>
+
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+
+      <%= f.label :password_confirmation, "Confirmation" %>
+      <%= f.password_field :password_confirmation %>
+
+      <%= f.submit "Create my account", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+```
+
+## Signup form HTML
+
+The presence of the do keyword indicates that form_for takes a block with one variable, which we’ve called f (for “form”).
+
+- What we do need to know is what the f object does: when called with a method corresponding to an HTML form element—such as a text field, radio button, or password field—f returns code for that element specifically designed to set an attribute of the @user object.
+
+This embedded Ruby
+```rb
+<%= f.label :name %>
+<%= f.text_field :name %>
+```
+Produce the HTML
+```html
+<label for="user_name">Name</label>
+<input id="user_name" name="user[name]" type="text" />
+```
+
+## A working form
