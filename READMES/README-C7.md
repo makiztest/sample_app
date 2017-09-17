@@ -202,3 +202,70 @@ Information in the debug could help us understand what’s going on in our appli
 #end
 ```
 
+## A Gravatar image and a sidebar
+
+We’ll now flesh it out a little with a `profile image` for each user and the first cut of the `user sidebar`.
+
+- We’ll start by adding a `“globally recognized avatar”`, or `Gravatar`, to the user profile.
+  - Gravatars are a convenient way to include user profile images without going through the trouble of managing image upload, cropping, and storage; all we need to do is construct the proper Gravatar image URL using the user’s email address and the corresponding Gravatar image will automatically appear.
+
+Our plan is to define a gravatar_for helper function to return a Gravatar image for a given user.
+```rb
+# In app/views/users/show.html.erb
+
+<% provide(:title, @user.name) %>
+<h1>
+  <%= gravatar_for @user %>
+  <%= @user.name %>
+</h1>
+```
+
+### Defining a gravatar_for helper method.
+```rb
+# In app/helpers/users_helper.rb
+module UsersHelper
+
+  # Returns the Gravatar for the given user.
+  def gravatar_for(user)
+    gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
+    gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}"
+    image_tag(gravatar_url, alt: user.name, class: "gravatar")
+  end
+end
+```
+> This helper Returns an image tag for the Gravatar with a gravatar CSS class and alt text equal to the user’s name (which is especially convenient for sight-impaired users using a screen reader)
+
+> The profile page appears which shows the default Gravatar image, which appears because user@example.com isn’t a real email address.
+
+### To get our application to display a custom Gravatar
+- we’ll use `update_attributes` to change the user’s email to something I control.
+
+```rb
+# In the console TYPE
+>> user = User.first
+>> user.update_attributes(name: "Example User", email: "example@railstutorial.org", password: "foobar", password_confirmation: "foobar")
+```
+
+### Creating the sidebar
+
+```rb
+# In app/views/users/show.html.erb
+
+<% provide(:title, @user.name) %>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <h1>
+        <%= gravatar_for @user %>
+        <%= @user.name %>
+      </h1>
+    </section>
+  </aside>
+</div>
+```
+
+## Signup form
+
+### Using `form_for`
+
+
