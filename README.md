@@ -345,3 +345,5 @@ Now it’s time to add an About page to our application.
 - Rails has already done the hardest part for us, because rails generate controller automatically generated a test file to get us started.
 
 To see the rest of the test tutorial go to this link [Initial test](https://www.railstutorial.org/book/static_pages)
+
+## THE END
