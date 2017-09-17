@@ -373,3 +373,17 @@ $ rails generate migration add_password_digest_to_users password_digest:string
 ```rb
 rails db:migrate
 ```
+
+### To make the password digest, has_secure_password uses a state-of-the-art hash function called [bcrypt](https://rubygems.org/gems/bcrypt/versions/3.1.11).
+```rb
+# Add bcrypt to the Gemfile
+...
+
+#gem 'rails',          '5.1.2'
+gem 'bcrypt',         '3.1.11'
+
+...
+```
+```rb
+bundle install
+```
