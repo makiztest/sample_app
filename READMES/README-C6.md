@@ -320,7 +320,7 @@ $ rails generate migration add_index_to_users_email
 # migrate the database
 rails db:migrate
 ```
-- Having addressed the uniqueness caveat, there’s one more change we need to make to be assured of email uniqueness
+### Having addressed the uniqueness caveat, there’s one more change we need to make to be assured of email uniqueness
 
 - Some database adapters use case-sensitive indices, considering the strings “Foo@ExAMPle.CoM” and “foo@example.com” to be distinct, but our application treats those addresses as the same.
 
@@ -347,3 +347,29 @@ rails db:migrate
 
 (where `self` refers to the `current user`), but inside the User model the self keyword is optional on the right-hand side:
 
+## Adding a secure password
+
+The method is to require each user to have a password (with a password confirmation), and then store a hashed version of the password in the database.
+
+### A hashed password
+- Most of the secure password machinery will be implemented using a single Rails method called `has_secure_password`.
+
+    - The only requirement for has_secure_password to work its magic is for the corresponding model to have an attribute called `password_digest`.
+
+1. First generate an appropriate migration for the password_digest column.
+
+2. We can choose any migration name we want, but it’s convenient to end the name with ``to_users`, since in this case Rails automatically constructs a migration to add columns to the users table. 
+
+3. The result, with migration name add_password_digest_to_users
+
+```rb
+# TYPE IN TERMINAL
+
+$ rails generate migration add_password_digest_to_users password_digest:string
+```
+
+> Here we’ve also supplied the argument password_digest:string with the name and type of attribute we want to create.
+
+```rb
+rails db:migrate
+```
