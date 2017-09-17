@@ -693,3 +693,15 @@ end
 # In ./Procfile
 web: bundle exec puma -C config/puma.rb
 ```
+
+## Production deployment
+
+```rb
+# Type in terminal
+$ rails test
+$ git add -A
+$ git commit -m "Use SSL and the Puma webserver in production"
+$ git push
+$ git push heroku
+$ heroku run rails db:migrate
+```
