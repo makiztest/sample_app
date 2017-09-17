@@ -102,3 +102,9 @@ with
 <title><%= full_title(yield(:title)) %></title>
 ```
 
+see link for test update here [Test update](https://www.railstutorial.org/book/rails_flavored_ruby)
+
+---
+
+## Strings and methods
+
