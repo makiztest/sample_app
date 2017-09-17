@@ -329,3 +329,79 @@ Produce the HTML
 ```
 
 ## A working form
+-  In particular, it ensures that a POST request to /users is handled by the create action. Our strategy for the create action is to use the form submission to make a new user object using User.new
+
+- this opportunity to introduce an `if-else` branching structure.
+
+  - Which allows us to handle the cases of failure and success separately based on the value of @user.save.
+  - Which is either true or false depending on whether or not the save succeeds.
+
+### A create action that can handle signup failure
+```rb
+# In app/controllers/users_controller.rb
+...
+
+def create
+    @user = User.new(params[:user])    # Not the final implementation!
+    if @user.save
+      # Handle a successful save.
+    else
+      render 'new'
+    end
+  end
+
+...
+```
+
+if you try to signup you will get an error
+
+`ActiveModel::ForbiddenAttributesError in UsersController#create
+ActiveModel::ForbiddenAttributesError
+`
+- Users controller as symbols, so that params[:user] is the hash of user attributes
+
+```rb
+@user = User.new(params[:user])
+
+# is the same as 
+@user = User.new(name: "Foo Bar", email: "foo@invalid",
+                 password: "foo", password_confirmation: "bar")
+```
+
+> But the reason is that initializing the entire params hash is extremely dangerous—it arranges to pass to User.new all data submitted by a user.
+
+- In the present instance, we want to require the params hash to have a :user attribute, and we want to permit the name, email, password, and password confirmation attributes (but no others).
+
+```rb
+params.require(:user).permit(:name, :email, :password, :password_confirmation)
+```
+
+- To facilitate the use of these parameters, it’s conventional to introduce an `auxiliary method` called `user_params` (which returns an appropriate initialization hash) and use it in place of params[:user]
+
+```rb
+@user = User.new(user_params)
+```
+
+> Since `user_params` will only be used internally by the Users controller and need not be exposed to external users via the web, we’ll `make it private` using `Ruby’s private keyword`.
+
+```rb
+class UsersController < ApplicationController
+...
+
+#  def create
+    @user = User.new(user_params)
+#    if @user.save
+      # Handle a successful save.
+#    else
+#      render 'new'
+#    end
+#  end
+
+  private
+
+    def user_params
+      params.require(:user).permit(:name, :email, :password,
+                                   :password_confirmation)
+    end
+end
+```
