@@ -287,3 +287,36 @@ end
                     uniqueness: { case_sensitive: false }
 end
 ```
+> There’s just one small problem, which is that the Active Record `uniqueness validation does not guarantee` uniqueness at the `database level`.
+
+- When a user accidentally clicks on “Submit” twice.
+    - The following sequence occurs: request 1 creates a user in memory that passes validation, request 2 does the same, request 1’s user gets saved, request 2’s user gets saved.
+    - Result: two user records with the exact same email address, despite the uniqueness validation.
+
+> Luckily, the solution is straightforward to implement: we just need to `enforce uniqueness at the database level` as well as at `the model level`
+
+- Our method is to create a database index on the email column and then require that the index be unique.
+
+Putting an index on the email column fixes the problem.
+
+We are adding structure to an existing model, so we need to create a migration directly using the migration generator.
+
+```rb
+# TYPE IN TERMINAL
+$ rails generate migration add_index_to_users_email
+```
+> Unlike the migration for users, the email uniqueness migration is not pre-defined, so we need to fill in its contents
+```rb
+# In db/migrate/[timestamp]_add_index_to_users_email.rb
+
+#class AddIndexToUsersEmail < ActiveRecord::Migration[5.0]
+#  def change
+    add_index :users, :email, unique: true
+#  end
+#end
+```
+> This uses a Rails method called add_index to add an index on the email column of the users table. The index by itself doesn’t enforce uniqueness, but the option unique: true does.
+```rb
+# migrate the database
+rails db:migrate
+```
